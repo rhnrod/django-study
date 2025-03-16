@@ -1,0 +1,72 @@
+<div class="recipe recipe-list-item">
+  <div class="recipe-cover">
+    {% if is_detail_page is True %}
+      <img src=" {{ recipe.cover.url }} " alt="Temporário" />
+    {% else %}
+      <a href="{% url 'recipes:recipe' recipe.id %}"><img src=" {{ recipe.cover.url }} " alt="Temporário" /></a>
+    {% endif %}
+  </div>
+  <div class="recipe-title-container">
+    <h2 class="recipe-title">
+      {% if is_detail_page is True %}
+        {{ recipe.title }}
+      {% else %}
+        <a href="{% url 'recipes:recipe' recipe.id %}">{{ recipe.title }}</a>
+      {% endif %}
+    </h2>
+  </div>
+  <div class="recipe-author">
+    <span class="recipe-author-item">
+      <i class="fa-solid fa-user"></i>
+      {% if recipe.author.first_name %}
+        {{ recipe.author.first_name }} {{ recipe.author.last_name }}
+      {% else %}
+        {{ recipe.author.username }}
+      {% endif %}
+    </span>
+    <span class="recipe-author-item">
+      <i class="fa-solid fa-calendar-days"></i>
+      {{ recipe.created_at|date:'d/m/Y' }} às {{ recipe.created_at|date:'H:i' }}
+    </span>
+
+    {% if recipe.category is not None %}
+      <span class="recipe-author-item">
+        <a href="{% url 'recipes:category' recipe.category.id %}">
+          <i class="fa-solid fa-layer-group"></i>
+          {{ recipe.category.name }}
+        </a>
+      </span>
+    {% endif %}
+  </div>
+  <div class="recipe-content">
+    <p>{{ recipe.description }}</p>
+  </div>
+  <div class="recipe-meta-container">
+    <div class="recipe-meta recipe-preparations">
+      <h3 class="recipe-meta-tile"><i class="fa-solid fa-stopwatch"></i> Preparo</h3>
+      <div class="recipe-meta-text">{{ recipe.preparation_time }} {{ recipe.preparation_time_unit }}</div>
+    </div>
+    <div class="recipe-meta recipe-servings">
+      <h3 class="recipe-meta-tile"><i class="fa-solid fa-pizza-slice"></i> Porções</h3>
+      <div class="recipe-meta-text">{{ recipe.servings }} {{ recipe.servings_unit }}</div>
+    </div>
+  </div>
+  {% if is_detail_page is not True %}
+    <footer class="recipe-footer">
+      <a href="{% url 'recipes:recipe' recipe.id %}" class="recipe-read-more button button-dark button-full-width">
+        <i class="fa-solid fa-eye"></i>
+        <span>Ver mais...</span>
+      </a>
+    </footer>
+  {% endif %}
+
+  {% if is_detail_page is True %}
+    <div class="preparation-steps">
+      {% if recipe.preparation_steps_is_html is True %}
+        {{ recipe.preparation_steps|safe }}
+      {% else %}
+        {{ recipe.preparation_steps|linebreaksbr }}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
